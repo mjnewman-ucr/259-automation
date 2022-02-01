@@ -115,9 +115,7 @@ hyp(9)
 ---
 # Function arguments
 
-- Arguments can be any type (numeric, character, etc.)
-- Unlike other languages, function definitions don't specify input types
-- To avoid unwanted behavior, you can check or convert types
+- Since function definitions don't specify input types, you should check or convert types
 ```{r}
 hyp <- function(side_a, side_b) {
   if (is.numeric(side_a) & is.numeric(side_b)) {
@@ -128,7 +126,6 @@ hyp <- function(side_a, side_b) {
   } else {
     return("Both sides must be numeric values")
   }
-
 }
 hyp(9, 9)
 hyp("9", "8")
@@ -136,29 +133,29 @@ hyp("9", "8")
 ---
 # Control program flow with `if` and `else` statements
 
-
+```{r}
+x <- 1
+if (x == 0) {
+  paste(x, "is exactly 0")
+} else if (x < 0) {
+  paste(x, "is negative")
+} else {
+  paste(x, "is positive")
+} 
+```
 
 ---
-`r chunk_reveal("vectors", break_type = "auto", widths = c(2, 1), title = "# Vectors")`
+# Control program flow with `if` and `else` statements
 
-```{r vectors, include = FALSE}
-v <- c(1, 2, 3, 4, 5)
-v
-typeof(v)
-length(v)
-v[1] # Use brackets to access a vector element
-v[3]
-v <- c(v, 6, 7, 8) # use c to add items
-v <- c(1, 2, 3, "4", "5", "6") 
-v # You cannot mix types in a vector
-v <- c(x = 1, y = 2, z = 3) # Named vector
-v
-v['y']
-
-files <- list.files(path = "data_raw")
-files[1] # Character vector
-files[2]
-length(files) 
+```{r}
+x <- -1
+if (x == 0) {
+  paste(x, "is exactly 0")
+} else if (x < 0) {
+  paste(x, "is negative")
+} else {
+  paste(x, "is positive")
+} 
 ```
 
 ---
