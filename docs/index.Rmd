@@ -47,7 +47,10 @@ library(icons) #https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free
 - **Replacing repetitive code with more efficient code**
 
 ```{r, eval=F} 
+# Tedious thing 1
 summarize(m_a = mean(a), m_b = mean(b), m_c = mean(c), m_d = mean(d))
+
+# Tedious thing 2
 ds_a <- read_csv(“data_a.csv”)
 ds_b <- read_csv(“data_b.csv”)
 ds_c <- read_csv(“data_b.csv”) #oops
@@ -158,7 +161,7 @@ if (x == 0) {
 } 
 ```
 ---
-# Write "`"wrapper functions" to make your life easier
+# Write "wrapper functions" to make your life easier
 
 ```{r}
 mean_na <- function(x) mean(x, na.rm = T)
@@ -183,7 +186,7 @@ summary_stats_na(data)
 ```
 
 ---
-# Piped expressions can be saved as functions using `.`
+# Piped expressions can be saved as functions
 
 ```{r}
 avg_height_mass <- . %>% 
@@ -205,43 +208,49 @@ starwars %>% group_by(species) %>% avg_height_mass
   
 - Introduce abstraction
   * Breaks up your code into conceptual chunks
-  * Increases the possibility of reuse
-  * Spend more time honing/debugging a reusable function than a one-off script
+  * Increases the possibility of reuse (and spend more time debugging things that will be reused)
 
 ---
-`r chunk_reveal("lists", break_type = "auto", widths = c(2, 1), title = "# Lists")`
+# Some types of automation are built-in
+- *Vectorized* operations (like adding values between two columns) operate on every element simultaneously (you don't have to perform the operation on every row)
 
-```{r lists, include = FALSE}
-lt <- list(x = 1, y = "3", z = 1:5)
-lt
-lt$z # Access named list elements with $
-lt[[1]] # Use double brackets to get list elements
-lt[[3]] <- 5:7
+- `Rename_all()`, `rename_with()` and `make_clean_names()` operate on multiple columns
 
-# List of lists
-lt <- list(lt1 = lt, lt2 = lt, lt3 = lt)
-lt$lt1
-
-model <- lm(height ~ mass, data = starwars)
-typeof(model)
-model$coefficients
-```
+- `Mutate()` and `summarize()` have can operate on selections of columns with `across()`
 
 ---
-# Working with dates and times
-- Correctly parse dates/times from character data
+`r chunk_reveal("mutate_across", break_type = "rotate", float = "none", widths = c(12, 1), title = "# Mutate across()")`
 
-- Calculate differences between dates/times (e.g., ages, task length)
-
-- Determine local time using time zones
-
-- Lots of options within the `lubridate` package
-
-```{r, include = F}
-dates <- tibble(dates1 = c("2017-09-01", "2016-09-01", "2015-09-01", "2014-09-01"),
-                dates2 = c("9/01/2018", "09/01/2017", "9/1/2016", "9/1/2015"),
-                dates3 = c("March 1, 2019", "May 1, 2018", "January 20, 2017", "February 4, 2020"))
+```{r mutate_across, include = FALSE}
+ds <- starwars %>% select(-where(is.list))
+ds %>% mutate(across(everything(), as.character)) #ROTATE
+ds %>% mutate(across(c("height", "mass"), round)) #ROTATE
+ds %>% mutate(across(where(is.numeric), round)) #ROTATE
+ds %>% mutate(across(where(is.numeric), ~ .x *100)) #ROTATE
+ds %>% mutate(across(ends_with("color"), ~ str_remove_all(.x, "[:punct:]"))) #ROTATE
 ```
+---
+# Across() relies on "in-line" functions
+
+- `{r}~ round(.x)` is a shortcut for:
+```{r}
+round_x <- function(x) round(x)
+```
+- in-line functions use `.x` as the argument
+
+---
+`r chunk_reveal("summarize_across", break_type = "rotate", float = "none", widths = c(12, 1), title = "# Summarize across()")`
+
+```{r mutate_across, include = FALSE}
+ds <- starwars %>% select(-where(is.list))
+fx_list <- list(mean = mean_na, sd = sd_na, se = se_na)
+ds %>% summarize(across(c("height", "mass"), mean_na)) #ROTATE
+ds %>% summarize(across(height:mass, mean, na.rm = T)) #ROTATE
+ds %>% summarize(across(where(is.numeric), ~ mean(.x, na.rm = T))) #ROTATE
+ds %>% summarize(across(where(is.numeric), fx_list)) #ROTATE
+ds %>% summarize(across(where(is.numeric), fx_list, .names = "{.fn}-{.col}")) #ROTATE
+```
+---
 
 <!-- adjust font size and other formatting defs in this css code chunk -->
 ```{css, eval = TRUE, echo = FALSE}

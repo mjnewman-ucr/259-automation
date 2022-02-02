@@ -37,7 +37,10 @@ class: center, middle, inverse, title-slide
 
 
 ```r
+# Tedious thing 1
 summarize(m_a = mean(a), m_b = mean(b), m_c = mean(c), m_d = mean(d))
+
+# Tedious thing 2
 ds_a &lt;- read_csv(“data_a.csv”)
 ds_b &lt;- read_csv(“data_b.csv”)
 ds_c &lt;- read_csv(“data_b.csv”) #oops
@@ -194,7 +197,7 @@ if (x == 0) {
 [1] "-1 is negative"
 ```
 ---
-# Wrapper functions to make your life easier
+# Write "wrapper functions" to make your life easier
 
 
 ```r
@@ -230,6 +233,60 @@ $sd
 $se
 [1] 1.21106
 ```
+
+---
+# Piped expressions can be saved as functions
+
+
+```r
+avg_height_mass &lt;- . %&gt;% 
+  select(height, mass) %&gt;% 
+  summarize(mean_ht = mean_na(height), mean_ms = mean_na(mass))
+
+starwars %&gt;% avg_height_mass
+```
+
+```
+# A tibble: 1 × 2
+  mean_ht mean_ms
+    &lt;dbl&gt;   &lt;dbl&gt;
+1    174.    97.3
+```
+
+```r
+starwars %&gt;% group_by(species) %&gt;% avg_height_mass
+```
+
+```
+# A tibble: 38 × 3
+   species   mean_ht mean_ms
+   &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;
+ 1 Aleena        79     15  
+ 2 Besalisk     198    102  
+ 3 Cerean       198     82  
+ 4 Chagrian     196    NaN  
+ 5 Clawdite     168     55  
+ 6 Droid        131.    69.8
+ 7 Dug          112     40  
+ 8 Ewok          88     20  
+ 9 Geonosian    183     80  
+10 Gungan       209.    74  
+# … with 28 more rows
+```
+
+---
+# Advantages of functions
+
+- Save typing, make code more readable
+
+- Encapsulate computations
+  * Note that *internal* intermediate variables don't appear in your environment
+  * Functions in R can access variables in the global environment even if they are not passed as arguments
+  
+- Introduce abstraction
+  * Breaks up your code into conceptual chunks (clearly defined inputs/outputs)
+  * Increases the possibility of reuse
+  * Spend more time honing/debugging a reusable function than a one-off script
 
 ---
 count: false
