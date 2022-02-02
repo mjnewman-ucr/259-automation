@@ -129,7 +129,6 @@ hyp(9)
 ---
 # Function arguments
 
-- Arguments can be any type (numeric, character, etc.)
 - Since function definitions don't specify input types, you should check or convert types
 
 ```r
@@ -193,6 +192,43 @@ if (x == 0) {
 
 ```
 [1] "-1 is negative"
+```
+---
+# Wrapper functions to make your life easier
+
+
+```r
+mean_na &lt;- function(x) mean(x, na.rm = T)
+sd_na &lt;- function(x) sd(x, na.rm = T)
+se_na &lt;- function(x) {
+  x &lt;- discard(x, is.na) #discard is like "filter if not" for vectors
+  sd(x)/sqrt(length(x))
+}
+```
+- Note, one-line functions don't need curly brackets
+
+---
+# Use lists to return multiple outputs
+
+
+```r
+summary_stats_na &lt;- function(x) {
+  # Functions can call previously defined functions
+  list(mean = mean_na(x), sd = sd_na(x), se = se_na(x))
+}
+data &lt;- c(4, 6, 9, 12, 5, 6, NA)
+summary_stats_na(data)
+```
+
+```
+$mean
+[1] 7
+
+$sd
+[1] 2.966479
+
+$se
+[1] 1.21106
 ```
 
 ---
