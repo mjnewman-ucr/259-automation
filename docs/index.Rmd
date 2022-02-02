@@ -118,9 +118,9 @@ hyp(9)
 ---
 # Function arguments
 
-- Since function definitions don't specify input types, you should check or convert types
 ```{r}
 hyp <- function(side_a, side_b) {
+  #Functions don't ensure the type of arguments
   if (is.numeric(side_a) & is.numeric(side_b)) {
       a <- side_a^2
       b <- ifelse(is.null(side_b), a, side_b^2)
@@ -263,11 +263,35 @@ ds %>% summary_stats("height")
 ds %>% group_by(species) %>% filter(n() > 1) %>% summary_stats(c("height","mass"))
 ```
 
+---
 
+# Iteration
+
+- Run the same series of computations on each element of a vector or list, one at a time
+- A "for loop" is constructed in a similar way to a function or if-else statement
+```{r}
+for (i in c(1, 2, 3, 4, 5)) {
+  # "i" will take on each value of the vector 1:5
+  print(paste("This is loop iteration", i))
+}
+```
+
+---
+# For loops
+
+- The vector to iterate over need not be sequential:
+
+```{r}
+days_of_the_week <- c("Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun")
+
+for (i in days_of_the_week) {
+  print(paste("Today is", i))
+}
+```
 
 <!-- adjust font size and other formatting defs in this css code chunk -->
 ```{css, eval = TRUE, echo = FALSE}
-.remark-code{line-height: 1; font-size: 70%}
+.remark-code{line-height: 1.1; font-size: 70%}
 
 @media print {
   .has-continuation {

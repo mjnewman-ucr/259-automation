@@ -132,10 +132,10 @@ hyp(9)
 ---
 # Function arguments
 
-- Since function definitions don't specify input types, you should check or convert types
 
 ```r
 hyp &lt;- function(side_a, side_b) {
+  #Functions don't ensure the type of arguments
   if (is.numeric(side_a) &amp; is.numeric(side_b)) {
       a &lt;- side_a^2
       b &lt;- ifelse(is.null(side_b), a, side_b^2)
@@ -653,7 +653,7 @@ summary_stats &lt;- function(df, var_select_string) {
   fx_list &lt;- list(M = na_mean, SD = na_sd)
   df  %&gt;% summarize(across(contains(var_select_string) &amp; where(is.numeric), fx_list))
 }
-starwars %&gt;% summary_stats("height")
+ds %&gt;% summary_stats("height")
 ```
 
 ```
@@ -664,7 +664,7 @@ starwars %&gt;% summary_stats("height")
 ```
 
 ```r
-starwars %&gt;% group_by(species) %&gt;% filter(n() &gt; 1) %&gt;% summary_stats(c("height","mass"))
+ds %&gt;% group_by(species) %&gt;% filter(n() &gt; 1) %&gt;% summary_stats(c("height","mass"))
 ```
 
 ```
@@ -682,11 +682,55 @@ starwars %&gt;% group_by(species) %&gt;% filter(n() &gt; 1) %&gt;% summary_stats
 9 &lt;NA&gt;         181.      2.89   48     NA   
 ```
 
+---
 
+# Iteration
+
+- Run the same series of computations on each element of a vector or list, one at a time
+- A "for loop" is constructed in a similar way to a function or if-else statement
+
+```r
+for (i in c(1, 2, 3, 4, 5)) {
+  # "i" will take on each value of the vector 1:5
+  print(paste("This is loop iteration", i))
+}
+```
+
+```
+[1] "This is loop iteration 1"
+[1] "This is loop iteration 2"
+[1] "This is loop iteration 3"
+[1] "This is loop iteration 4"
+[1] "This is loop iteration 5"
+```
+
+---
+# For loop
+
+- The vector to iterate over need not be sequential:
+
+
+```r
+days_of_the_week &lt;- c("Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun")
+
+for (i in days_of_the_week) {
+  print(paste("Today is", i))
+}
+```
+
+```
+[1] "Today is Mon"
+[1] "Today is Tues"
+[1] "Today is Wed"
+[1] "Today is Thur"
+[1] "Today is Fri"
+[1] "Today is Sat"
+[1] "Today is Sun"
+```
 
 &lt;!-- adjust font size and other formatting defs in this css code chunk --&gt;
 &lt;style type="text/css"&gt;
-.remark-code{line-height: 1; font-size: 70%}
+.remark-code{line-height: 1.1; font-size: 70%}
 
 @media print {
   .has-continuation {
