@@ -735,8 +735,14 @@ for (i in days_of_the_week) {
 preds &lt;- c("cyl", "disp", "hp", "drat", "wt", "qsec")
 cor_output &lt;- vector()
 for (p in preds) {
-cor_output[p] &lt;- cor(mtcars['mpg'], mtcars[p])
+  cor_output[p] &lt;- cor(mtcars['mpg'], mtcars[p])
 }
+cor_output
+```
+
+```
+       cyl       disp         hp       drat         wt       qsec 
+-0.8521620 -0.8475514 -0.7761684  0.6811719 -0.8676594  0.4186840 
 ```
 
 ---
@@ -987,6 +993,7 @@ cor_output
 ```
 
 ```r
+# Use set_names to make mapped outputs more readable
 cor_output %&gt;% set_names(preds)
 ```
 
@@ -1272,7 +1279,7 @@ F-statistic: 19.65 on 1 and 11 DF,  p-value: 0.001008
 ```
 &lt;!-- adjust font size and other formatting defs in this css code chunk --&gt;
 &lt;style type="text/css"&gt;
-.remark-code{line-height: 1.1; font-size: 70%}
+.remark-code{line-height: 1.1; font-size: 65%}
 
 @media print {
   .has-continuation {

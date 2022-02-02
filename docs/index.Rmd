@@ -295,8 +295,9 @@ for (i in days_of_the_week) {
 preds <- c("cyl", "disp", "hp", "drat", "wt", "qsec")
 cor_output <- vector()
 for (p in preds) {
-cor_output[p] <- cor(mtcars['mpg'], mtcars[p])
+  cor_output[p] <- cor(mtcars['mpg'], mtcars[p])
 }
+cor_output
 ```
 
 ---
@@ -345,6 +346,7 @@ cor_output
 preds <- c("cyl", "disp", "hp", "drat", "wt", "qsec")
 cor_output <- map_dbl(preds, ~ cor(mtcars['mpg'], mtcars[.x]))
 cor_output
+# Use set_names to make mapped outputs more readable
 cor_output %>% set_names(preds)
 ```
 
@@ -391,7 +393,7 @@ map(results, summary)
 ```
 <!-- adjust font size and other formatting defs in this css code chunk -->
 ```{css, eval = TRUE, echo = FALSE}
-.remark-code{line-height: 1.1; font-size: 70%}
+.remark-code{line-height: 1.1; font-size: 65%}
 
 @media print {
   .has-continuation {
