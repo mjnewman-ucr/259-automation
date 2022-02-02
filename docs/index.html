@@ -284,447 +284,199 @@ starwars %&gt;% group_by(species) %&gt;% avg_height_mass
   * Functions in R can access variables in the global environment even if they are not passed as arguments
   
 - Introduce abstraction
-  * Breaks up your code into conceptual chunks (clearly defined inputs/outputs)
-  * Increases the possibility of reuse
-  * Spend more time honing/debugging a reusable function than a one-off script
+  * Breaks up your code into conceptual chunks
+  * Increases the possibility of reuse (and spend more time debugging things that will be reused)
+
+---
+# Some types of automation are built-in
+- *Vectorized* operations (like adding values between two columns) operate on every element simultaneously (you don't have to perform the operation on every row)
+
+- `Rename_all()`, `rename_with()` and `make_clean_names()` operate on multiple columns
+
+- `Mutate()` and `summarize()` have can operate on selections of columns with `across()`
 
 ---
 count: false
  
-# Lists
-.panel1-lists-auto[
+# Mutate across()
+.panel1-mutate_across-rotate[
 
 ```r
-*lt &lt;- list(x = 1, y = "3", z = 1:5)
+ds &lt;- starwars %&gt;% select(-where(is.list))
+*ds %&gt;% mutate(across(everything(), as.character))
 ```
 ]
  
-.panel2-lists-auto[
-
-]
-
----
-count: false
- 
-# Lists
-.panel1-lists-auto[
-
-```r
-lt &lt;- list(x = 1, y = "3", z = 1:5)
-*lt
-```
-]
- 
-.panel2-lists-auto[
+.panel2-mutate_across-rotate[
 
 ```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 1 2 3 4 5
-```
-]
-
----
-count: false
- 
-# Lists
-.panel1-lists-auto[
-
-```r
-lt &lt;- list(x = 1, y = "3", z = 1:5)
-lt
-*lt$z # Access named list elements with $  # Access named list elements with $
-```
-]
- 
-.panel2-lists-auto[
-
-```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1 2 3 4 5
+# A tibble: 87 × 11
+   name    height mass  hair_color  skin_color eye_color birth_year sex   gender
+   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt; 
+ 1 Luke S… 172    77    blond       fair       blue      19         male  mascu…
+ 2 C-3PO   167    75    &lt;NA&gt;        gold       yellow    112        none  mascu…
+ 3 R2-D2   96     32    &lt;NA&gt;        white, bl… red       33         none  mascu…
+ 4 Darth … 202    136   none        white      yellow    41.9       male  mascu…
+ 5 Leia O… 150    49    brown       light      brown     19         fema… femin…
+ 6 Owen L… 178    120   brown, grey light      blue      52         male  mascu…
+ 7 Beru W… 165    75    brown       light      blue      47         fema… femin…
+ 8 R5-D4   97     32    &lt;NA&gt;        white, red red       &lt;NA&gt;       none  mascu…
+ 9 Biggs … 183    84    black       light      brown     24         male  mascu…
+10 Obi-Wa… 182    77    auburn, wh… fair       blue-gray 57         male  mascu…
+# … with 77 more rows, and 2 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;
 ```
 ]
 
 ---
 count: false
  
-# Lists
-.panel1-lists-auto[
+# Mutate across()
+.panel1-mutate_across-rotate[
 
 ```r
-lt &lt;- list(x = 1, y = "3", z = 1:5)
-lt
-lt$z # Access named list elements with $  # Access named list elements with $
-*lt[[1]]  # Use double brackets to get list elements
+ds &lt;- starwars %&gt;% select(-where(is.list))
+*ds %&gt;% mutate(across(c("height", "mass"), round))
 ```
 ]
  
-.panel2-lists-auto[
+.panel2-mutate_across-rotate[
 
 ```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1
+# A tibble: 87 × 11
+   name    height  mass hair_color  skin_color eye_color birth_year sex   gender
+   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+ 1 Luke S…    172    77 blond       fair       blue            19   male  mascu…
+ 2 C-3PO      167    75 &lt;NA&gt;        gold       yellow         112   none  mascu…
+ 3 R2-D2       96    32 &lt;NA&gt;        white, bl… red             33   none  mascu…
+ 4 Darth …    202   136 none        white      yellow          41.9 male  mascu…
+ 5 Leia O…    150    49 brown       light      brown           19   fema… femin…
+ 6 Owen L…    178   120 brown, grey light      blue            52   male  mascu…
+ 7 Beru W…    165    75 brown       light      blue            47   fema… femin…
+ 8 R5-D4       97    32 &lt;NA&gt;        white, red red             NA   none  mascu…
+ 9 Biggs …    183    84 black       light      brown           24   male  mascu…
+10 Obi-Wa…    182    77 auburn, wh… fair       blue-gray       57   male  mascu…
+# … with 77 more rows, and 2 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;
 ```
 ]
 
 ---
 count: false
  
-# Lists
-.panel1-lists-auto[
+# Mutate across()
+.panel1-mutate_across-rotate[
 
 ```r
-lt &lt;- list(x = 1, y = "3", z = 1:5)
-lt
-lt$z # Access named list elements with $  # Access named list elements with $
-lt[[1]]  # Use double brackets to get list elements
-*lt[[3]] &lt;- 5:7
+ds &lt;- starwars %&gt;% select(-where(is.list))
+*ds %&gt;% mutate(across(where(is.numeric), round))
 ```
 ]
  
-.panel2-lists-auto[
+.panel2-mutate_across-rotate[
 
 ```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1
+# A tibble: 87 × 11
+   name    height  mass hair_color  skin_color eye_color birth_year sex   gender
+   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+ 1 Luke S…    172    77 blond       fair       blue              19 male  mascu…
+ 2 C-3PO      167    75 &lt;NA&gt;        gold       yellow           112 none  mascu…
+ 3 R2-D2       96    32 &lt;NA&gt;        white, bl… red               33 none  mascu…
+ 4 Darth …    202   136 none        white      yellow            42 male  mascu…
+ 5 Leia O…    150    49 brown       light      brown             19 fema… femin…
+ 6 Owen L…    178   120 brown, grey light      blue              52 male  mascu…
+ 7 Beru W…    165    75 brown       light      blue              47 fema… femin…
+ 8 R5-D4       97    32 &lt;NA&gt;        white, red red               NA none  mascu…
+ 9 Biggs …    183    84 black       light      brown             24 male  mascu…
+10 Obi-Wa…    182    77 auburn, wh… fair       blue-gray         57 male  mascu…
+# … with 77 more rows, and 2 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;
 ```
 ]
 
 ---
 count: false
  
-# Lists
-.panel1-lists-auto[
+# Mutate across()
+.panel1-mutate_across-rotate[
 
 ```r
-lt &lt;- list(x = 1, y = "3", z = 1:5)
-lt
-lt$z # Access named list elements with $  # Access named list elements with $
-lt[[1]]  # Use double brackets to get list elements
-lt[[3]] &lt;- 5:7
-
-# List of lists
-*lt &lt;- list(lt1 = lt, lt2 = lt, lt3 = lt)
+ds &lt;- starwars %&gt;% select(-where(is.list))
+*ds %&gt;% mutate(across(where(is.numeric), ~ .x *100))
 ```
 ]
  
-.panel2-lists-auto[
+.panel2-mutate_across-rotate[
 
 ```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1
+# A tibble: 87 × 11
+   name    height  mass hair_color  skin_color eye_color birth_year sex   gender
+   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+ 1 Luke S…  17200  7700 blond       fair       blue            1900 male  mascu…
+ 2 C-3PO    16700  7500 &lt;NA&gt;        gold       yellow         11200 none  mascu…
+ 3 R2-D2     9600  3200 &lt;NA&gt;        white, bl… red             3300 none  mascu…
+ 4 Darth …  20200 13600 none        white      yellow          4190 male  mascu…
+ 5 Leia O…  15000  4900 brown       light      brown           1900 fema… femin…
+ 6 Owen L…  17800 12000 brown, grey light      blue            5200 male  mascu…
+ 7 Beru W…  16500  7500 brown       light      blue            4700 fema… femin…
+ 8 R5-D4     9700  3200 &lt;NA&gt;        white, red red               NA none  mascu…
+ 9 Biggs …  18300  8400 black       light      brown           2400 male  mascu…
+10 Obi-Wa…  18200  7700 auburn, wh… fair       blue-gray       5700 male  mascu…
+# … with 77 more rows, and 2 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;
 ```
 ]
 
 ---
 count: false
  
-# Lists
-.panel1-lists-auto[
+# Mutate across()
+.panel1-mutate_across-rotate[
 
 ```r
-lt &lt;- list(x = 1, y = "3", z = 1:5)
-lt
-lt$z # Access named list elements with $  # Access named list elements with $
-lt[[1]]  # Use double brackets to get list elements
-lt[[3]] &lt;- 5:7
-
-# List of lists
-lt &lt;- list(lt1 = lt, lt2 = lt, lt3 = lt)
-*lt$lt1
+ds &lt;- starwars %&gt;% select(-where(is.list))
+*ds %&gt;% mutate(across(ends_with("color"), ~ str_remove_all(.x, "[:punct:]")))
 ```
 ]
  
-.panel2-lists-auto[
+.panel2-mutate_across-rotate[
 
 ```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1
-```
-
-```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 5 6 7
-```
-]
-
----
-count: false
- 
-# Lists
-.panel1-lists-auto[
-
-```r
-lt &lt;- list(x = 1, y = "3", z = 1:5)
-lt
-lt$z # Access named list elements with $  # Access named list elements with $
-lt[[1]]  # Use double brackets to get list elements
-lt[[3]] &lt;- 5:7
-
-# List of lists
-lt &lt;- list(lt1 = lt, lt2 = lt, lt3 = lt)
-lt$lt1
-
-*model &lt;- lm(height ~ mass, data = starwars)
-```
-]
- 
-.panel2-lists-auto[
-
-```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1
-```
-
-```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 5 6 7
-```
-]
-
----
-count: false
- 
-# Lists
-.panel1-lists-auto[
-
-```r
-lt &lt;- list(x = 1, y = "3", z = 1:5)
-lt
-lt$z # Access named list elements with $  # Access named list elements with $
-lt[[1]]  # Use double brackets to get list elements
-lt[[3]] &lt;- 5:7
-
-# List of lists
-lt &lt;- list(lt1 = lt, lt2 = lt, lt3 = lt)
-lt$lt1
-
-model &lt;- lm(height ~ mass, data = starwars)
-*typeof(model)
-```
-]
- 
-.panel2-lists-auto[
-
-```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1
-```
-
-```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 5 6 7
-```
-
-```
-[1] "list"
-```
-]
-
----
-count: false
- 
-# Lists
-.panel1-lists-auto[
-
-```r
-lt &lt;- list(x = 1, y = "3", z = 1:5)
-lt
-lt$z # Access named list elements with $  # Access named list elements with $
-lt[[1]]  # Use double brackets to get list elements
-lt[[3]] &lt;- 5:7
-
-# List of lists
-lt &lt;- list(lt1 = lt, lt2 = lt, lt3 = lt)
-lt$lt1
-
-model &lt;- lm(height ~ mass, data = starwars)
-typeof(model)
-*model$coefficients
-```
-]
- 
-.panel2-lists-auto[
-
-```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1 2 3 4 5
-```
-
-```
-[1] 1
-```
-
-```
-$x
-[1] 1
-
-$y
-[1] "3"
-
-$z
-[1] 5 6 7
-```
-
-```
-[1] "list"
-```
-
-```
- (Intercept)         mass 
-171.28536091   0.02807045 
+# A tibble: 87 × 11
+   name     height  mass hair_color skin_color eye_color birth_year sex   gender
+   &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+ 1 Luke Sk…    172    77 blond      fair       blue            19   male  mascu…
+ 2 C-3PO       167    75 &lt;NA&gt;       gold       yellow         112   none  mascu…
+ 3 R2-D2        96    32 &lt;NA&gt;       white blue red             33   none  mascu…
+ 4 Darth V…    202   136 none       white      yellow          41.9 male  mascu…
+ 5 Leia Or…    150    49 brown      light      brown           19   fema… femin…
+ 6 Owen La…    178   120 brown grey light      blue            52   male  mascu…
+ 7 Beru Wh…    165    75 brown      light      blue            47   fema… femin…
+ 8 R5-D4        97    32 &lt;NA&gt;       white red  red             NA   none  mascu…
+ 9 Biggs D…    183    84 black      light      brown           24   male  mascu…
+10 Obi-Wan…    182    77 auburn wh… fair       bluegray        57   male  mascu…
+# … with 77 more rows, and 2 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;
 ```
 ]
 
 &lt;style&gt;
-.panel1-lists-auto {
+.panel1-mutate_across-rotate {
   color: black;
-  width: 65.3333333333333%;
+  width: 90.4615384615385%;
   hight: 32%;
-  float: left;
+  float: none;
   padding-left: 1%;
   font-size: 80%
 }
-.panel2-lists-auto {
+.panel2-mutate_across-rotate {
   color: black;
-  width: 32.6666666666667%;
+  width: 7.53846153846154%;
   hight: 32%;
-  float: left;
+  float: none;
   padding-left: 1%;
   font-size: 80%
 }
-.panel3-lists-auto {
+.panel3-mutate_across-rotate {
   color: black;
   width: NA%;
   hight: 33%;
-  float: left;
+  float: none;
   padding-left: 1%;
   font-size: 80%
 }
@@ -733,16 +485,202 @@ $z
 
 
 
+---
+# Across() relies on "in-line" functions
+
+- `~ round(.x)` is a shortcut for:
+
+```r
+round_x &lt;- function(x) round(x)
+```
+- in-line functions use `.x` as the argument
 
 ---
-# Working with dates and times
-- Correctly parse dates/times from character data
+count: false
+ 
+# Summarize across()
+.panel1-summarize_across-rotate[
 
-- Calculate differences between dates/times (e.g., ages, task length)
+```r
+ds &lt;- starwars %&gt;% select(-where(is.list))
+fx_list &lt;- list(mean = mean_na, sd = sd_na, se = se_na)
+*ds %&gt;% summarize(across(height:mass, mean, na.rm = T))
+```
+]
+ 
+.panel2-summarize_across-rotate[
 
-- Determine local time using time zones
+```
+# A tibble: 1 × 2
+  height  mass
+   &lt;dbl&gt; &lt;dbl&gt;
+1   174.  97.3
+```
+]
 
-- Lots of options within the `lubridate` package
+---
+count: false
+ 
+# Summarize across()
+.panel1-summarize_across-rotate[
+
+```r
+ds &lt;- starwars %&gt;% select(-where(is.list))
+fx_list &lt;- list(mean = mean_na, sd = sd_na, se = se_na)
+*ds %&gt;% summarize(across(height:mass, ~ mean(.x, na.rm = T)))
+```
+]
+ 
+.panel2-summarize_across-rotate[
+
+```
+# A tibble: 1 × 2
+  height  mass
+   &lt;dbl&gt; &lt;dbl&gt;
+1   174.  97.3
+```
+]
+
+---
+count: false
+ 
+# Summarize across()
+.panel1-summarize_across-rotate[
+
+```r
+ds &lt;- starwars %&gt;% select(-where(is.list))
+fx_list &lt;- list(mean = mean_na, sd = sd_na, se = se_na)
+*ds %&gt;% summarize(across(height:mass, mean_na))
+```
+]
+ 
+.panel2-summarize_across-rotate[
+
+```
+# A tibble: 1 × 2
+  height  mass
+   &lt;dbl&gt; &lt;dbl&gt;
+1   174.  97.3
+```
+]
+
+---
+count: false
+ 
+# Summarize across()
+.panel1-summarize_across-rotate[
+
+```r
+ds &lt;- starwars %&gt;% select(-where(is.list))
+fx_list &lt;- list(mean = mean_na, sd = sd_na, se = se_na)
+*ds %&gt;% summarize(across(where(is.numeric), fx_list))
+```
+]
+ 
+.panel2-summarize_across-rotate[
+
+```
+# A tibble: 1 × 9
+  height_mean height_sd height_se mass_mean mass_sd mass_se birth_year_mean
+        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;           &lt;dbl&gt;
+1        174.      34.8      3.86      97.3    169.    22.1            87.6
+# … with 2 more variables: birth_year_sd &lt;dbl&gt;, birth_year_se &lt;dbl&gt;
+```
+]
+
+---
+count: false
+ 
+# Summarize across()
+.panel1-summarize_across-rotate[
+
+```r
+ds &lt;- starwars %&gt;% select(-where(is.list))
+fx_list &lt;- list(mean = mean_na, sd = sd_na, se = se_na)
+*ds %&gt;% summarize(across(where(is.numeric), fx_list, .names = "{.fn}-{.col}"))
+```
+]
+ 
+.panel2-summarize_across-rotate[
+
+```
+# A tibble: 1 × 9
+  `mean-height` `sd-height` `se-height` `mean-mass` `sd-mass` `se-mass`
+          &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1          174.        34.8        3.86        97.3      169.      22.1
+# … with 3 more variables: mean-birth_year &lt;dbl&gt;, sd-birth_year &lt;dbl&gt;,
+#   se-birth_year &lt;dbl&gt;
+```
+]
+
+&lt;style&gt;
+.panel1-summarize_across-rotate {
+  color: black;
+  width: 90.4615384615385%;
+  hight: 32%;
+  float: none;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-summarize_across-rotate {
+  color: black;
+  width: 7.53846153846154%;
+  hight: 32%;
+  float: none;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-summarize_across-rotate {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: none;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+---
+# Make a summary stats function
+
+```r
+summary_stats &lt;- function(df, var_select_string) {
+  na_mean &lt;- function(x) mean(x, na.rm = T)
+  na_sd &lt;- function(x) sd(x, na.rm = T)
+  fx_list &lt;- list(M = na_mean, SD = na_sd)
+  df  %&gt;% summarize(across(contains(var_select_string) &amp; where(is.numeric), fx_list))
+}
+starwars %&gt;% summary_stats("height")
+```
+
+```
+# A tibble: 1 × 2
+  height_M height_SD
+     &lt;dbl&gt;     &lt;dbl&gt;
+1     174.      34.8
+```
+
+```r
+starwars %&gt;% group_by(species) %&gt;% filter(n() &gt; 1) %&gt;% summary_stats(c("height","mass"))
+```
+
+```
+# A tibble: 9 × 5
+  species  height_M height_SD mass_M mass_SD
+  &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+1 Droid        131.     49.1    69.8   51.0 
+2 Gungan       209.     14.2    74     11.3 
+3 Human        177.     12.5    82.8   19.4 
+4 Kaminoan     221      11.3    88     NA   
+5 Mirialan     168       2.83   53.1    4.38
+6 Twi'lek      179       1.41   55     NA   
+7 Wookiee      231       4.24  124     17.0 
+8 Zabrak       173       2.83   80     NA   
+9 &lt;NA&gt;         181.      2.89   48     NA   
+```
 
 
 

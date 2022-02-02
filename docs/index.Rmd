@@ -232,7 +232,7 @@ ds %>% mutate(across(ends_with("color"), ~ str_remove_all(.x, "[:punct:]"))) #RO
 ---
 # Across() relies on "in-line" functions
 
-- `{r}~ round(.x)` is a shortcut for:
+- `~ round(.x)` is a shortcut for:
 ```{r}
 round_x <- function(x) round(x)
 ```
@@ -241,16 +241,29 @@ round_x <- function(x) round(x)
 ---
 `r chunk_reveal("summarize_across", break_type = "rotate", float = "none", widths = c(12, 1), title = "# Summarize across()")`
 
-```{r mutate_across, include = FALSE}
+```{r summarize_across, include = FALSE}
 ds <- starwars %>% select(-where(is.list))
 fx_list <- list(mean = mean_na, sd = sd_na, se = se_na)
-ds %>% summarize(across(c("height", "mass"), mean_na)) #ROTATE
 ds %>% summarize(across(height:mass, mean, na.rm = T)) #ROTATE
-ds %>% summarize(across(where(is.numeric), ~ mean(.x, na.rm = T))) #ROTATE
+ds %>% summarize(across(height:mass, ~ mean(.x, na.rm = T))) #ROTATE
+ds %>% summarize(across(height:mass, mean_na)) #ROTATE
 ds %>% summarize(across(where(is.numeric), fx_list)) #ROTATE
 ds %>% summarize(across(where(is.numeric), fx_list, .names = "{.fn}-{.col}")) #ROTATE
 ```
 ---
+# Make a summary stats function
+```{r}
+summary_stats <- function(df, var_select_string) {
+  na_mean <- function(x) mean(x, na.rm = T)
+  na_sd <- function(x) sd(x, na.rm = T)
+  fx_list <- list(M = na_mean, SD = na_sd)
+  df  %>% summarize(across(contains(var_select_string) & where(is.numeric), fx_list))
+}
+ds %>% summary_stats("height")
+ds %>% group_by(species) %>% filter(n() > 1) %>% summary_stats(c("height","mass"))
+```
+
+
 
 <!-- adjust font size and other formatting defs in this css code chunk -->
 ```{css, eval = TRUE, echo = FALSE}
