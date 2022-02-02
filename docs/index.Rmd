@@ -289,6 +289,29 @@ for (i in days_of_the_week) {
 }
 ```
 
+---
+# Use for loops to run a series of analyses
+```{r}
+preds <- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+cor_output <- vector()
+for (p in preds) {
+cor_output[p] <- cor(mtcars['mpg'], mtcars[p])
+}
+```
+
+---
+# Use for loops to run a series of analyses
+```{r}
+preds <- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+for (p in preds) {
+  f <- as.formula(paste("mpg ~ ", p))
+  res <- lm(f, data = mtcars)
+  print(p)
+  print(summary(res))
+}
+```
+
+
 <!-- adjust font size and other formatting defs in this css code chunk -->
 ```{css, eval = TRUE, echo = FALSE}
 .remark-code{line-height: 1.1; font-size: 70%}
