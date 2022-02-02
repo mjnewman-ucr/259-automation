@@ -59,7 +59,7 @@ ds_c &lt;- read_csv(“data_b.csv”) #oops
 &lt;svg viewBox="0 0 496 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"&gt;&lt;/path&gt;&lt;/svg&gt; Follow along from the [Github repo](https://github.com/psych-259-data-science-2022/259-automation)
 ]
 
-.footnote[.small[.bold[Last updated: 2022-02-01]]]
+.footnote[.small[.bold[Last updated: 2022-02-02]]]
 
 ---
 # Functions extend and customize a programming language
@@ -705,7 +705,7 @@ for (i in c(1, 2, 3, 4, 5)) {
 ```
 
 ---
-# For loop
+# For loops
 
 - The vector to iterate over need not be sequential:
 
@@ -728,6 +728,548 @@ for (i in days_of_the_week) {
 [1] "Today is Sun"
 ```
 
+---
+# Use for loops to run a series of analyses
+
+```r
+preds &lt;- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+cor_output &lt;- vector()
+for (p in preds) {
+cor_output[p] &lt;- cor(mtcars['mpg'], mtcars[p])
+}
+```
+
+---
+# Use for loops to run a series of analyses
+
+```r
+preds &lt;- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+for (p in preds) {
+  f &lt;- as.formula(paste("mpg ~ ", p))
+  res &lt;- lm(f, data = mtcars)
+  print(p)
+  print(summary(res))
+}
+```
+
+```
+[1] "cyl"
+
+Call:
+lm(formula = f, data = mtcars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.9814 -2.1185  0.2217  1.0717  7.5186 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  37.8846     2.0738   18.27  &lt; 2e-16 ***
+cyl          -2.8758     0.3224   -8.92 6.11e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.206 on 30 degrees of freedom
+Multiple R-squared:  0.7262,	Adjusted R-squared:  0.7171 
+F-statistic: 79.56 on 1 and 30 DF,  p-value: 6.113e-10
+
+[1] "disp"
+
+Call:
+lm(formula = f, data = mtcars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.8922 -2.2022 -0.9631  1.6272  7.2305 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 29.599855   1.229720  24.070  &lt; 2e-16 ***
+disp        -0.041215   0.004712  -8.747 9.38e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.251 on 30 degrees of freedom
+Multiple R-squared:  0.7183,	Adjusted R-squared:  0.709 
+F-statistic: 76.51 on 1 and 30 DF,  p-value: 9.38e-10
+
+[1] "hp"
+
+Call:
+lm(formula = f, data = mtcars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.7121 -2.1122 -0.8854  1.5819  8.2360 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 30.09886    1.63392  18.421  &lt; 2e-16 ***
+hp          -0.06823    0.01012  -6.742 1.79e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.863 on 30 degrees of freedom
+Multiple R-squared:  0.6024,	Adjusted R-squared:  0.5892 
+F-statistic: 45.46 on 1 and 30 DF,  p-value: 1.788e-07
+
+[1] "drat"
+
+Call:
+lm(formula = f, data = mtcars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9.0775 -2.6803 -0.2095  2.2976  9.0225 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   -7.525      5.477  -1.374     0.18    
+drat           7.678      1.507   5.096 1.78e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.485 on 30 degrees of freedom
+Multiple R-squared:  0.464,	Adjusted R-squared:  0.4461 
+F-statistic: 25.97 on 1 and 30 DF,  p-value: 1.776e-05
+
+[1] "wt"
+
+Call:
+lm(formula = f, data = mtcars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.5432 -2.3647 -0.1252  1.4096  6.8727 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  37.2851     1.8776  19.858  &lt; 2e-16 ***
+wt           -5.3445     0.5591  -9.559 1.29e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.046 on 30 degrees of freedom
+Multiple R-squared:  0.7528,	Adjusted R-squared:  0.7446 
+F-statistic: 91.38 on 1 and 30 DF,  p-value: 1.294e-10
+
+[1] "qsec"
+
+Call:
+lm(formula = f, data = mtcars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9.8760 -3.4539 -0.7203  2.2774 11.6491 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)  -5.1140    10.0295  -0.510   0.6139  
+qsec          1.4121     0.5592   2.525   0.0171 *
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.564 on 30 degrees of freedom
+Multiple R-squared:  0.1753,	Adjusted R-squared:  0.1478 
+F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708
+```
+
+---
+# Map a function to each element of a vector/list
+
+.center[![an image](map.png)]
+
+---
+# Map a function to each element of a vector/list
+
+```r
+days_of_the_week &lt;- c("Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun")
+map(days_of_the_week, toupper) #Default output is a list
+```
+
+```
+[[1]]
+[1] "MON"
+
+[[2]]
+[1] "TUES"
+
+[[3]]
+[1] "WED"
+
+[[4]]
+[1] "THUR"
+
+[[5]]
+[1] "FRI"
+
+[[6]]
+[1] "SAT"
+
+[[7]]
+[1] "SUN"
+```
+---
+# Map a function to each element of a vector/list
+
+```r
+days_of_the_week &lt;- c("Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun")
+map_chr(days_of_the_week, toupper) #Use map_* to specify the output type
+```
+
+```
+[1] "MON"  "TUES" "WED"  "THUR" "FRI"  "SAT"  "SUN" 
+```
+
+```r
+map_chr(days_of_the_week, ~ paste("Day: ", .x)) #Use in-line fns like in across()
+```
+
+```
+[1] "Day:  Mon"  "Day:  Tues" "Day:  Wed"  "Day:  Thur" "Day:  Fri" 
+[6] "Day:  Sat"  "Day:  Sun" 
+```
+
+```r
+map_lgl(days_of_the_week, ~ str_detect(.x, "M"))
+```
+
+```
+[1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+```
+
+---
+# Use map to run a series of analyses
+
+```r
+preds &lt;- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+cor_output &lt;- map(preds, ~ cor(mtcars['mpg'], mtcars[.x]))
+cor_output
+```
+
+```
+[[1]]
+          cyl
+mpg -0.852162
+
+[[2]]
+          disp
+mpg -0.8475514
+
+[[3]]
+            hp
+mpg -0.7761684
+
+[[4]]
+         drat
+mpg 0.6811719
+
+[[5]]
+            wt
+mpg -0.8676594
+
+[[6]]
+        qsec
+mpg 0.418684
+```
+
+---
+# Use map to run a series of analyses
+
+```r
+preds &lt;- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+cor_output &lt;- map_dbl(preds, ~ cor(mtcars['mpg'], mtcars[.x]))
+cor_output
+```
+
+```
+[1] -0.8521620 -0.8475514 -0.7761684  0.6811719 -0.8676594  0.4186840
+```
+
+```r
+cor_output %&gt;% set_names(preds)
+```
+
+```
+       cyl       disp         hp       drat         wt       qsec 
+-0.8521620 -0.8475514 -0.7761684  0.6811719 -0.8676594  0.4186840 
+```
+
+---
+# Use map to run a series of analyses
+
+```r
+preds &lt;- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+output &lt;- map(preds, ~ lm(as.formula(paste("mpg ~ ", .x)), data = mtcars))
+output %&gt;% set_names(preds)
+```
+
+```
+$cyl
+
+Call:
+lm(formula = as.formula(paste("mpg ~ ", .x)), data = mtcars)
+
+Coefficients:
+(Intercept)          cyl  
+     37.885       -2.876  
+
+
+$disp
+
+Call:
+lm(formula = as.formula(paste("mpg ~ ", .x)), data = mtcars)
+
+Coefficients:
+(Intercept)         disp  
+   29.59985     -0.04122  
+
+
+$hp
+
+Call:
+lm(formula = as.formula(paste("mpg ~ ", .x)), data = mtcars)
+
+Coefficients:
+(Intercept)           hp  
+   30.09886     -0.06823  
+
+
+$drat
+
+Call:
+lm(formula = as.formula(paste("mpg ~ ", .x)), data = mtcars)
+
+Coefficients:
+(Intercept)         drat  
+     -7.525        7.678  
+
+
+$wt
+
+Call:
+lm(formula = as.formula(paste("mpg ~ ", .x)), data = mtcars)
+
+Coefficients:
+(Intercept)           wt  
+     37.285       -5.344  
+
+
+$qsec
+
+Call:
+lm(formula = as.formula(paste("mpg ~ ", .x)), data = mtcars)
+
+Coefficients:
+(Intercept)         qsec  
+     -5.114        1.412  
+```
+
+---
+# Other considerations
+
+- If you're new to loops/mapping, don't try to write the whole thing at once
+
+- First write the single element/single case computation, and then edit it to work over a loop/map
+
+- Writing a function makes map or across a lot easier to use (no need for in-line functions)
+
+- Splitting is a nice way to create a list of filtered data frames to feed into map
+
+---
+# Use map to run a series of analyses
+
+```r
+preds &lt;- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+mpg_lm &lt;- function(p) {
+  f &lt;- as.formula(paste("mpg ~ ", p))
+  res &lt;- lm(f, data = mtcars)
+  res$call &lt;- f
+  return(res)
+}
+results &lt;- map(preds, mpg_lm)
+map(results, summary)
+```
+
+```
+[[1]]
+
+Call:
+mpg ~ cyl
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.9814 -2.1185  0.2217  1.0717  7.5186 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  37.8846     2.0738   18.27  &lt; 2e-16 ***
+cyl          -2.8758     0.3224   -8.92 6.11e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.206 on 30 degrees of freedom
+Multiple R-squared:  0.7262,	Adjusted R-squared:  0.7171 
+F-statistic: 79.56 on 1 and 30 DF,  p-value: 6.113e-10
+
+
+[[2]]
+
+Call:
+mpg ~ disp
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.8922 -2.2022 -0.9631  1.6272  7.2305 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 29.599855   1.229720  24.070  &lt; 2e-16 ***
+disp        -0.041215   0.004712  -8.747 9.38e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.251 on 30 degrees of freedom
+Multiple R-squared:  0.7183,	Adjusted R-squared:  0.709 
+F-statistic: 76.51 on 1 and 30 DF,  p-value: 9.38e-10
+
+
+[[3]]
+
+Call:
+mpg ~ hp
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.7121 -2.1122 -0.8854  1.5819  8.2360 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 30.09886    1.63392  18.421  &lt; 2e-16 ***
+hp          -0.06823    0.01012  -6.742 1.79e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.863 on 30 degrees of freedom
+Multiple R-squared:  0.6024,	Adjusted R-squared:  0.5892 
+F-statistic: 45.46 on 1 and 30 DF,  p-value: 1.788e-07
+
+
+[[4]]
+
+Call:
+mpg ~ drat
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9.0775 -2.6803 -0.2095  2.2976  9.0225 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   -7.525      5.477  -1.374     0.18    
+drat           7.678      1.507   5.096 1.78e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.485 on 30 degrees of freedom
+Multiple R-squared:  0.464,	Adjusted R-squared:  0.4461 
+F-statistic: 25.97 on 1 and 30 DF,  p-value: 1.776e-05
+
+
+[[5]]
+
+Call:
+mpg ~ wt
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.5432 -2.3647 -0.1252  1.4096  6.8727 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  37.2851     1.8776  19.858  &lt; 2e-16 ***
+wt           -5.3445     0.5591  -9.559 1.29e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.046 on 30 degrees of freedom
+Multiple R-squared:  0.7528,	Adjusted R-squared:  0.7446 
+F-statistic: 91.38 on 1 and 30 DF,  p-value: 1.294e-10
+
+
+[[6]]
+
+Call:
+mpg ~ qsec
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9.8760 -3.4539 -0.7203  2.2774 11.6491 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)  -5.1140    10.0295  -0.510   0.6139  
+qsec          1.4121     0.5592   2.525   0.0171 *
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.564 on 30 degrees of freedom
+Multiple R-squared:  0.1753,	Adjusted R-squared:  0.1478 
+F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708
+```
+
+---
+# Use map on a split data frame
+
+```r
+ds &lt;- mtcars %&gt;% mutate(trans = factor(am, labels = c("auto","manual")))
+df_split &lt;- ds %&gt;% group_by(trans) %&gt;% group_split %&gt;% set_names(levels(ds$trans))
+results &lt;- map(df_split, ~ lm(mpg ~ hp, data = .x))
+map(results, summary)
+```
+
+```
+$auto
+
+Call:
+lm(formula = mpg ~ hp, data = .x)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.1018 -1.9026  0.6114  1.5592  2.9241 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 26.624848   1.615883  16.477 6.92e-12 ***
+hp          -0.059137   0.009582  -6.172 1.02e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.192 on 17 degrees of freedom
+Multiple R-squared:  0.6914,	Adjusted R-squared:  0.6733 
+F-statistic: 38.09 on 1 and 17 DF,  p-value: 1.025e-05
+
+
+$manual
+
+Call:
+lm(formula = mpg ~ hp, data = .x)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.3818 -3.5802 -0.5367  2.8334  5.8752 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 31.84250    1.99262  15.980 5.84e-09 ***
+hp          -0.05873    0.01325  -4.432  0.00101 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.859 on 11 degrees of freedom
+Multiple R-squared:  0.6411,	Adjusted R-squared:  0.6084 
+F-statistic: 19.65 on 1 and 11 DF,  p-value: 0.001008
+```
 &lt;!-- adjust font size and other formatting defs in this css code chunk --&gt;
 &lt;style type="text/css"&gt;
 .remark-code{line-height: 1.1; font-size: 70%}

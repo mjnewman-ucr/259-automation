@@ -311,7 +311,84 @@ for (p in preds) {
 }
 ```
 
+---
+# Map a function to each element of a vector/list
 
+.center[![an image](map.png)]
+
+---
+# Map a function to each element of a vector/list
+```{r}
+days_of_the_week <- c("Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun")
+map(days_of_the_week, toupper) #Default output is a list
+```
+---
+# Map a function to each element of a vector/list
+```{r}
+days_of_the_week <- c("Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun")
+map_chr(days_of_the_week, toupper) #Use map_* to specify the output type
+map_chr(days_of_the_week, ~ paste("Day: ", .x)) #Use in-line fns like in across()
+map_lgl(days_of_the_week, ~ str_detect(.x, "M"))
+```
+
+---
+# Use map to run a series of analyses
+```{r}
+preds <- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+cor_output <- map(preds, ~ cor(mtcars['mpg'], mtcars[.x]))
+cor_output
+```
+
+---
+# Use map to run a series of analyses
+```{r}
+preds <- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+cor_output <- map_dbl(preds, ~ cor(mtcars['mpg'], mtcars[.x]))
+cor_output
+cor_output %>% set_names(preds)
+```
+
+---
+# Use map to run a series of analyses
+```{r}
+preds <- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+output <- map(preds, ~ lm(as.formula(paste("mpg ~ ", .x)), data = mtcars))
+output %>% set_names(preds)
+```
+
+---
+# Other considerations
+
+- If you're new to loops/mapping, don't try to write the whole thing at once
+
+- First write the single element/single case computation, and then edit it to work over a loop/map
+
+- Writing a function makes map or across a lot easier to use (no need for in-line functions)
+
+- Splitting is a nice way to create a list of filtered data frames to feed into map
+
+---
+# Use map to run a series of analyses
+```{r}
+preds <- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+mpg_lm <- function(p) {
+  f <- as.formula(paste("mpg ~ ", p))
+  res <- lm(f, data = mtcars)
+  res$call <- f
+  return(res)
+}
+results <- map(preds, mpg_lm)
+map(results, summary)
+```
+
+---
+# Use map on a split data frame
+```{r}
+ds <- mtcars %>% mutate(trans = factor(am, labels = c("auto","manual")))
+df_split <- ds %>% group_by(trans) %>% group_split %>% set_names(levels(ds$trans))
+results <- map(df_split, ~ lm(mpg ~ hp, data = .x))
+map(results, summary)
+```
 <!-- adjust font size and other formatting defs in this css code chunk -->
 ```{css, eval = TRUE, echo = FALSE}
 .remark-code{line-height: 1.1; font-size: 70%}
