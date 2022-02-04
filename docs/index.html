@@ -59,7 +59,7 @@ ds_c &lt;- read_csv(“data_b.csv”) #oops
 &lt;svg viewBox="0 0 496 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"&gt;&lt;/path&gt;&lt;/svg&gt; Follow along from the [Github repo](https://github.com/psych-259-data-science-2022/259-automation)
 ]
 
-.footnote[.small[.bold[Last updated: 2022-02-02]]]
+.footnote[.small[.bold[Last updated: 2022-02-04]]]
 
 ---
 # Functions extend and customize a programming language
@@ -388,6 +388,39 @@ ds &lt;- starwars %&gt;% select(-where(is.list))
  9 Biggs …    183    84 black       light      brown             24 male  mascu…
 10 Obi-Wa…    182    77 auburn, wh… fair       blue-gray         57 male  mascu…
 # … with 77 more rows, and 2 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;
+```
+]
+
+---
+count: false
+ 
+# Mutate across()
+.panel1-mutate_across-rotate[
+
+```r
+ds &lt;- starwars %&gt;% select(-where(is.list))
+*ds %&gt;% mutate(across(where(is.numeric), round, .names = "{.col}_rounded"))
+```
+]
+ 
+.panel2-mutate_across-rotate[
+
+```
+# A tibble: 87 × 14
+   name    height  mass hair_color  skin_color eye_color birth_year sex   gender
+   &lt;chr&gt;    &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+ 1 Luke S…    172    77 blond       fair       blue            19   male  mascu…
+ 2 C-3PO      167    75 &lt;NA&gt;        gold       yellow         112   none  mascu…
+ 3 R2-D2       96    32 &lt;NA&gt;        white, bl… red             33   none  mascu…
+ 4 Darth …    202   136 none        white      yellow          41.9 male  mascu…
+ 5 Leia O…    150    49 brown       light      brown           19   fema… femin…
+ 6 Owen L…    178   120 brown, grey light      blue            52   male  mascu…
+ 7 Beru W…    165    75 brown       light      blue            47   fema… femin…
+ 8 R5-D4       97    32 &lt;NA&gt;        white, red red             NA   none  mascu…
+ 9 Biggs …    183    84 black       light      brown           24   male  mascu…
+10 Obi-Wa…    182    77 auburn, wh… fair       blue-gray       57   male  mascu…
+# … with 77 more rows, and 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;,
+#   height_rounded &lt;dbl&gt;, mass_rounded &lt;dbl&gt;, birth_year_rounded &lt;dbl&gt;
 ```
 ]
 
@@ -1224,6 +1257,697 @@ Residual standard error: 5.564 on 30 degrees of freedom
 Multiple R-squared:  0.1753,	Adjusted R-squared:  0.1478 
 F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708
 ```
+
+---
+# What if we wanted all combinations?
+
+```r
+preds &lt;- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+all_combos &lt;- expand.grid(preds, preds) %&gt;% filter(Var1 != Var2)
+all_combos
+```
+
+```
+   Var1 Var2
+1  disp  cyl
+2    hp  cyl
+3  drat  cyl
+4    wt  cyl
+5  qsec  cyl
+6   cyl disp
+7    hp disp
+8  drat disp
+9    wt disp
+10 qsec disp
+11  cyl   hp
+12 disp   hp
+13 drat   hp
+14   wt   hp
+15 qsec   hp
+16  cyl drat
+17 disp drat
+18   hp drat
+19   wt drat
+20 qsec drat
+21  cyl   wt
+22 disp   wt
+23   hp   wt
+24 drat   wt
+25 qsec   wt
+26  cyl qsec
+27 disp qsec
+28   hp qsec
+29 drat qsec
+30   wt qsec
+```
+
+---
+# Use map to run a series of analyses
+
+```r
+# Revise fx to take two inputs
+mpg_lm &lt;- function(criterion, predictor) {
+  f &lt;- as.formula(paste(criterion,"~",predictor))
+  res &lt;- lm(f, data = mtcars)
+  res$call &lt;- f
+  return(res)
+}
+# Use map2 to provide two inputs
+results &lt;- map2(all_combos$Var1, all_combos$Var2, mpg_lm)
+map(results, summary)
+```
+
+```
+[[1]]
+
+Call:
+disp ~ cyl
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-73.985 -45.233   3.565  26.688 127.818 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -156.609     35.181  -4.452 0.000109 ***
+cyl           62.599      5.469  11.445  1.8e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 54.38 on 30 degrees of freedom
+Multiple R-squared:  0.8137,	Adjusted R-squared:  0.8075 
+F-statistic:   131 on 1 and 30 DF,  p-value: 1.803e-12
+
+
+[[2]]
+
+Call:
+hp ~ cyl
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-54.61 -25.99 -11.28  21.51 130.39 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -51.054     24.982  -2.044   0.0499 *  
+cyl           31.958      3.884   8.229 3.48e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 38.62 on 30 degrees of freedom
+Multiple R-squared:  0.693,	Adjusted R-squared:  0.6827 
+F-statistic: 67.71 on 1 and 30 DF,  p-value: 3.478e-09
+
+
+[[3]]
+
+Call:
+drat ~ cyl
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.8759 -0.2079 -0.0413  0.2641  1.0032 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  4.89316    0.25111  19.486  &lt; 2e-16 ***
+cyl         -0.20955    0.03904  -5.368 8.24e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.3882 on 30 degrees of freedom
+Multiple R-squared:  0.4899,	Adjusted R-squared:  0.4729 
+F-statistic: 28.81 on 1 and 30 DF,  p-value: 8.245e-06
+
+
+[[4]]
+
+Call:
+wt ~ cyl
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.8243 -0.4293 -0.1518  0.3031  1.4297 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  0.56462    0.40062   1.409    0.169    
+cyl          0.42871    0.06228   6.883 1.22e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.6193 on 30 degrees of freedom
+Multiple R-squared:  0.6123,	Adjusted R-squared:  0.5994 
+F-statistic: 47.38 on 1 and 30 DF,  p-value: 1.218e-07
+
+
+[[5]]
+
+Call:
+qsec ~ cyl
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.4597 -0.9373  0.3003  0.8597  3.7572 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  21.5092     0.9477  22.697  &lt; 2e-16 ***
+cyl          -0.5916     0.1473  -4.015 0.000366 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.465 on 30 degrees of freedom
+Multiple R-squared:  0.3496,	Adjusted R-squared:  0.3279 
+F-statistic: 16.12 on 1 and 30 DF,  p-value: 0.0003661
+
+
+[[6]]
+
+Call:
+cyl ~ disp
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.3236 -0.6317 -0.1129  0.6915  1.2266 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 3.188568   0.296388   10.76 8.12e-12 ***
+disp        0.012998   0.001136   11.45 1.80e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.7837 on 30 degrees of freedom
+Multiple R-squared:  0.8137,	Adjusted R-squared:  0.8075 
+F-statistic:   131 on 1 and 30 DF,  p-value: 1.803e-12
+
+
+[[7]]
+
+Call:
+hp ~ disp
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-48.623 -28.378  -6.558  13.588 157.562 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  45.7345    16.1289   2.836  0.00811 ** 
+disp          0.4375     0.0618   7.080 7.14e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 42.65 on 30 degrees of freedom
+Multiple R-squared:  0.6256,	Adjusted R-squared:  0.6131 
+F-statistic: 50.13 on 1 and 30 DF,  p-value: 7.143e-08
+
+
+[[8]]
+
+Call:
+drat ~ disp
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.85409 -0.23642  0.01812  0.13112  0.99196 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  4.3034722  0.1447123  29.738  &lt; 2e-16 ***
+disp        -0.0030639  0.0005545  -5.526 5.28e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.3826 on 30 degrees of freedom
+Multiple R-squared:  0.5044,	Adjusted R-squared:  0.4879 
+F-statistic: 30.53 on 1 and 30 DF,  p-value: 5.282e-06
+
+
+[[9]]
+
+Call:
+wt ~ disp
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.89044 -0.29775 -0.00684  0.33428  0.66525 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 1.5998146  0.1729964   9.248 2.74e-10 ***
+disp        0.0070103  0.0006629  10.576 1.22e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.4574 on 30 degrees of freedom
+Multiple R-squared:  0.7885,	Adjusted R-squared:  0.7815 
+F-statistic: 111.8 on 1 and 30 DF,  p-value: 1.222e-11
+
+
+[[10]]
+
+Call:
+qsec ~ disp
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.8848 -1.2180  0.0448  0.9232  4.4890 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 19.291463   0.619031  31.164   &lt;2e-16 ***
+disp        -0.006253   0.002372  -2.636   0.0131 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.637 on 30 degrees of freedom
+Multiple R-squared:  0.1881,	Adjusted R-squared:  0.161 
+F-statistic:  6.95 on 1 and 30 DF,  p-value: 0.01314
+
+
+[[11]]
+
+Call:
+cyl ~ hp
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.27078 -0.74879 -0.06417  0.63512  1.74067 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 3.006795   0.425485   7.067 7.41e-08 ***
+hp          0.021684   0.002635   8.229 3.48e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.006 on 30 degrees of freedom
+Multiple R-squared:  0.693,	Adjusted R-squared:  0.6827 
+F-statistic: 67.71 on 1 and 30 DF,  p-value: 3.478e-09
+
+
+[[12]]
+
+Call:
+disp ~ hp
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-198.97  -37.39  -18.27   57.55  157.91 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  20.9925    32.6066   0.644    0.525    
+hp            1.4298     0.2019   7.080 7.14e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 77.09 on 30 degrees of freedom
+Multiple R-squared:  0.6256,	Adjusted R-squared:  0.6131 
+F-statistic: 50.13 on 1 and 30 DF,  p-value: 7.143e-08
+
+
+[[13]]
+
+Call:
+drat ~ hp
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.98245 -0.40998  0.06055  0.24054  1.03398 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  4.109909   0.205444   20.00  &lt; 2e-16 ***
+hp          -0.003500   0.001272   -2.75  0.00999 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.4857 on 30 degrees of freedom
+Multiple R-squared:  0.2014,	Adjusted R-squared:  0.1748 
+F-statistic: 7.565 on 1 and 30 DF,  p-value: 0.009989
+
+
+[[14]]
+
+Call:
+wt ~ hp
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.41757 -0.53122 -0.02038  0.42536  1.56455 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 1.838247   0.316520   5.808 2.39e-06 ***
+hp          0.009401   0.001960   4.796 4.15e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.7483 on 30 degrees of freedom
+Multiple R-squared:  0.4339,	Adjusted R-squared:  0.4151 
+F-statistic:    23 on 1 and 30 DF,  p-value: 4.146e-05
+
+
+[[15]]
+
+Call:
+qsec ~ hp
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.1766 -0.6975  0.0348  0.6520  4.0972 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 20.556354   0.542424  37.897  &lt; 2e-16 ***
+hp          -0.018458   0.003359  -5.495 5.77e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.282 on 30 degrees of freedom
+Multiple R-squared:  0.5016,	Adjusted R-squared:  0.485 
+F-statistic: 30.19 on 1 and 30 DF,  p-value: 5.766e-06
+
+
+[[16]]
+
+Call:
+cyl ~ drat
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.1433 -1.0573  0.4698  0.6457  3.2700 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  14.5960     1.5831   9.220 2.93e-10 ***
+drat         -2.3379     0.4355  -5.368 8.24e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.297 on 30 degrees of freedom
+Multiple R-squared:  0.4899,	Adjusted R-squared:  0.4729 
+F-statistic: 28.81 on 1 and 30 DF,  p-value: 8.245e-06
+
+
+[[17]]
+
+Call:
+disp ~ drat
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-143.44  -60.48  -22.98   61.85  222.91 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   822.82     108.29   7.598 1.79e-08 ***
+drat         -164.63      29.79  -5.526 5.28e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 88.69 on 30 degrees of freedom
+Multiple R-squared:  0.5044,	Adjusted R-squared:  0.4879 
+F-statistic: 30.53 on 1 and 30 DF,  p-value: 5.282e-06
+
+
+[[18]]
+
+Call:
+hp ~ drat
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-89.828 -40.261  -7.934   7.247 185.058 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   353.65      76.05    4.65 6.24e-05 ***
+drat          -57.55      20.92   -2.75  0.00999 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 62.28 on 30 degrees of freedom
+Multiple R-squared:  0.2014,	Adjusted R-squared:  0.1748 
+F-statistic: 7.565 on 1 and 30 DF,  p-value: 0.009989
+
+
+[[19]]
+
+Call:
+wt ~ drat
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.47813 -0.45423 -0.08474  0.29786  1.64984 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   7.9063     0.8522   9.277 2.55e-10 ***
+drat         -1.3038     0.2345  -5.561 4.78e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.698 on 30 degrees of freedom
+Multiple R-squared:  0.5076,	Adjusted R-squared:  0.4912 
+F-statistic: 30.92 on 1 and 30 DF,  p-value: 4.784e-06
+
+
+[[20]]
+
+Call:
+qsec ~ drat
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.5388 -0.9413  0.0324  0.9161  4.9527 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  16.7525     2.2087   7.585 1.86e-08 ***
+drat          0.3048     0.6076   0.502     0.62    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.809 on 30 degrees of freedom
+Multiple R-squared:  0.008318,	Adjusted R-squared:  -0.02474 
+F-statistic: 0.2516 on 1 and 30 DF,  p-value: 0.6196
+
+
+[[21]]
+
+Call:
+cyl ~ wt
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.14858 -0.77747 -0.04169  0.94448  1.87998 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   1.5925     0.6968   2.285   0.0295 *  
+wt            1.4282     0.2075   6.883 1.22e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.13 on 30 degrees of freedom
+Multiple R-squared:  0.6123,	Adjusted R-squared:  0.5994 
+F-statistic: 47.38 on 1 and 30 DF,  p-value: 1.218e-07
+
+
+[[22]]
+
+Call:
+disp ~ wt
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-88.18 -33.62 -10.05  35.15 125.59 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -131.15      35.72  -3.672 0.000933 ***
+wt            112.48      10.64  10.576 1.22e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 57.94 on 30 degrees of freedom
+Multiple R-squared:  0.7885,	Adjusted R-squared:  0.7815 
+F-statistic: 111.8 on 1 and 30 DF,  p-value: 1.222e-11
+
+
+[[23]]
+
+Call:
+hp ~ wt
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-83.430 -33.596 -13.587   7.913 172.030 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   -1.821     32.325  -0.056    0.955    
+wt            46.160      9.625   4.796 4.15e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 52.44 on 30 degrees of freedom
+Multiple R-squared:  0.4339,	Adjusted R-squared:  0.4151 
+F-statistic:    23 on 1 and 30 DF,  p-value: 4.146e-05
+
+
+[[24]]
+
+Call:
+drat ~ wt
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.74206 -0.28100  0.07584  0.30874  0.70966 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  4.84908    0.23512  20.624  &lt; 2e-16 ***
+wt          -0.38931    0.07001  -5.561 4.78e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.3814 on 30 degrees of freedom
+Multiple R-squared:  0.5076,	Adjusted R-squared:  0.4912 
+F-statistic: 30.92 on 1 and 30 DF,  p-value: 4.784e-06
+
+
+[[25]]
+
+Call:
+qsec ~ wt
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.3638 -1.0766  0.2051  0.8655  5.0298 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  18.8753     1.1025  17.120   &lt;2e-16 ***
+wt           -0.3191     0.3283  -0.972    0.339    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.789 on 30 degrees of freedom
+Multiple R-squared:  0.03053,	Adjusted R-squared:  -0.00179 
+F-statistic: 0.9446 on 1 and 30 DF,  p-value: 0.3389
+
+
+[[26]]
+
+Call:
+cyl ~ qsec
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.8663 -1.0635  0.2253  1.3272  1.9019 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  16.7344     2.6394   6.340 5.41e-07 ***
+qsec         -0.5909     0.1472  -4.015 0.000366 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.464 on 30 degrees of freedom
+Multiple R-squared:  0.3496,	Adjusted R-squared:  0.3279 
+F-statistic: 16.12 on 1 and 30 DF,  p-value: 0.0003661
+
+
+[[27]]
+
+Call:
+disp ~ qsec
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-164.161  -98.395    0.117   62.918  245.226 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   767.62     204.64   3.751 0.000753 ***
+qsec          -30.08      11.41  -2.636 0.013144 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 113.5 on 30 degrees of freedom
+Multiple R-squared:  0.1881,	Adjusted R-squared:  0.161 
+F-statistic:  6.95 on 1 and 30 DF,  p-value: 0.01314
+
+
+[[28]]
+
+Call:
+hp ~ qsec
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-86.903 -33.629   5.336  27.925 100.032 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  631.704     88.700   7.122 6.38e-08 ***
+qsec         -27.174      4.946  -5.495 5.77e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 49.2 on 30 degrees of freedom
+Multiple R-squared:  0.5016,	Adjusted R-squared:  0.485 
+F-statistic: 30.19 on 1 and 30 DF,  p-value: 5.766e-06
+
+
+[[29]]
+
+Call:
+drat ~ qsec
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.9013 -0.4996  0.0660  0.3299  1.3151 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)  3.10947    0.97569   3.187  0.00335 **
+qsec         0.02729    0.05440   0.502  0.61958   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.5413 on 30 degrees of freedom
+Multiple R-squared:  0.008318,	Adjusted R-squared:  -0.02474 
+F-statistic: 0.2516 on 1 and 30 DF,  p-value: 0.6196
+
+
+[[30]]
+
+Call:
+wt ~ qsec
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.7950 -0.6865  0.1553  0.4294  2.2040 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)  4.92479    1.76541   2.790  0.00908 **
+qsec        -0.09567    0.09843  -0.972  0.33887   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9793 on 30 degrees of freedom
+Multiple R-squared:  0.03053,	Adjusted R-squared:  -0.00179 
+F-statistic: 0.9446 on 1 and 30 DF,  p-value: 0.3389
+```
+
 
 ---
 # Use map on a split data frame

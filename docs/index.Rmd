@@ -226,6 +226,7 @@ ds <- starwars %>% select(-where(is.list))
 ds %>% mutate(across(everything(), as.character)) #ROTATE
 ds %>% mutate(across(c("height", "mass"), round)) #ROTATE
 ds %>% mutate(across(where(is.numeric), round)) #ROTATE
+ds %>% mutate(across(where(is.numeric), round, .names = "{.col}_rounded")) #ROTATE
 ds %>% mutate(across(where(is.numeric), ~ .x *100)) #ROTATE
 ds %>% mutate(across(ends_with("color"), ~ str_remove_all(.x, "[:punct:]"))) #ROTATE
 ```
@@ -382,6 +383,30 @@ mpg_lm <- function(p) {
 results <- map(preds, mpg_lm)
 map(results, summary)
 ```
+
+---
+# What if we wanted all combinations?
+```{r}
+preds <- c("cyl", "disp", "hp", "drat", "wt", "qsec")
+all_combos <- expand.grid(preds, preds) %>% filter(Var1 != Var2)
+all_combos
+```
+
+---
+# Use map to run a series of analyses
+```{r}
+# Revise fx to take two inputs
+mpg_lm <- function(criterion, predictor) {
+  f <- as.formula(paste(criterion,"~",predictor))
+  res <- lm(f, data = mtcars)
+  res$call <- f
+  return(res)
+}
+# Use map2 to provide two inputs
+results <- map2(all_combos$Var1, all_combos$Var2, mpg_lm)
+map(results, summary)
+```
+
 
 ---
 # Use map on a split data frame
