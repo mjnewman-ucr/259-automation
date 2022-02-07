@@ -44,6 +44,8 @@ library(icons) #https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free
 # Types of automation
 - Replacing manual copy/paste/renaming with data-cleaning scripts
 - Replacing drop-down menu analyses with scripts
+--
+
 - **Replacing repetitive code with more efficient code**
 
 ```{r, eval=F} 
@@ -214,15 +216,17 @@ starwars %>% group_by(species) %>% avg_height_mass
 # Some types of automation are built-in
 - *Vectorized* operations (like adding values between two columns) operate on every element simultaneously (you don't have to perform the operation on every row)
 
-- `Rename_all()`, `rename_with()` and `make_clean_names()` operate on multiple columns
+- `rename_all()`, `rename_with()` and `make_clean_names()` operate on multiple columns
 
-- `Mutate()` and `summarize()` have can operate on selections of columns with `across()`
+- `mutate()` and `summarize()` can operate on selections of columns with `across()`
+  * `across(selection_statement, fx_to_apply)`
 
 ---
 `r chunk_reveal("mutate_across", break_type = "rotate", float = "none", widths = c(12, 1), title = "# Mutate across()")`
 
 ```{r mutate_across, include = FALSE}
 ds <- starwars %>% select(-where(is.list))
+ds #ROTATE
 ds %>% mutate(across(everything(), as.character)) #ROTATE
 ds %>% mutate(across(c("height", "mass"), round)) #ROTATE
 ds %>% mutate(across(where(is.numeric), round)) #ROTATE
@@ -280,10 +284,10 @@ for (i in c(1, 2, 3, 4, 5)) {
 ---
 # For loops
 
-- The vector to iterate over need not be sequential:
+- The vector to iterate over doesn't need to be numeric or sequential:
 
 ```{r}
-days_of_the_week <- c("Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun")
+days_of_the_week <- c("Tues", "Wed", "Mon", "Thur", "Sun", "Fri" )
 
 for (i in days_of_the_week) {
   print(paste("Today is", i))
@@ -293,9 +297,16 @@ for (i in days_of_the_week) {
 ---
 # Use for loops to run a series of analyses
 ```{r}
+mtcars #built-in R dataset
+```
+
+---
+# Use for loops to run a series of analyses
+```{r}
 preds <- c("cyl", "disp", "hp", "drat", "wt", "qsec")
-cor_output <- vector()
+cor_output <- vector() #empty vector to store results
 for (p in preds) {
+  #Calculate each predictor's correlation with 'mpg'
   cor_output[p] <- cor(mtcars['mpg'], mtcars[p])
 }
 cor_output
@@ -304,11 +315,18 @@ cor_output
 ---
 # Use for loops to run a series of analyses
 ```{r}
+# Simple linear regression
+lm(mpg ~ cyl, data = mtcars)
+```
+
+---
+# Use for loops to run a series of analyses
+```{r}
 preds <- c("cyl", "disp", "hp", "drat", "wt", "qsec")
 for (p in preds) {
-  f <- as.formula(paste("mpg ~ ", p))
+  f <- as.formula(paste("mpg ~ ", p)) # Convert a string to a formula
   res <- lm(f, data = mtcars)
-  print(p)
+  print(p) #Need to explicitly print things within loops so that they display
   print(summary(res))
 }
 ```

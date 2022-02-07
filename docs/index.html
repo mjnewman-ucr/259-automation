@@ -33,6 +33,8 @@ class: center, middle, inverse, title-slide
 # Types of automation
 - Replacing manual copy/paste/renaming with data-cleaning scripts
 - Replacing drop-down menu analyses with scripts
+--
+
 - **Replacing repetitive code with more efficient code**
 
 
@@ -59,7 +61,7 @@ ds_c &lt;- read_csv(“data_b.csv”) #oops
 &lt;svg viewBox="0 0 496 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"&gt;&lt;/path&gt;&lt;/svg&gt; Follow along from the [Github repo](https://github.com/psych-259-data-science-2022/259-automation)
 ]
 
-.footnote[.small[.bold[Last updated: 2022-02-04]]]
+.footnote[.small[.bold[Last updated: 2022-02-07]]]
 
 ---
 # Functions extend and customize a programming language
@@ -291,9 +293,42 @@ starwars %&gt;% group_by(species) %&gt;% avg_height_mass
 # Some types of automation are built-in
 - *Vectorized* operations (like adding values between two columns) operate on every element simultaneously (you don't have to perform the operation on every row)
 
-- `Rename_all()`, `rename_with()` and `make_clean_names()` operate on multiple columns
+- `rename_all()`, `rename_with()` and `make_clean_names()` operate on multiple columns
 
-- `Mutate()` and `summarize()` have can operate on selections of columns with `across()`
+- `mutate()` and `summarize()` can operate on selections of columns with `across()`
+  * `across(selection_statement, fx_to_apply)`
+
+---
+count: false
+ 
+# Mutate across()
+.panel1-mutate_across-rotate[
+
+```r
+ds &lt;- starwars %&gt;% select(-where(is.list))
+*ds
+```
+]
+ 
+.panel2-mutate_across-rotate[
+
+```
+# A tibble: 87 × 11
+   name    height  mass hair_color  skin_color eye_color birth_year sex   gender
+   &lt;chr&gt;    &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+ 1 Luke S…    172    77 blond       fair       blue            19   male  mascu…
+ 2 C-3PO      167    75 &lt;NA&gt;        gold       yellow         112   none  mascu…
+ 3 R2-D2       96    32 &lt;NA&gt;        white, bl… red             33   none  mascu…
+ 4 Darth …    202   136 none        white      yellow          41.9 male  mascu…
+ 5 Leia O…    150    49 brown       light      brown           19   fema… femin…
+ 6 Owen L…    178   120 brown, grey light      blue            52   male  mascu…
+ 7 Beru W…    165    75 brown       light      blue            47   fema… femin…
+ 8 R5-D4       97    32 &lt;NA&gt;        white, red red             NA   none  mascu…
+ 9 Biggs …    183    84 black       light      brown           24   male  mascu…
+10 Obi-Wa…    182    77 auburn, wh… fair       blue-gray       57   male  mascu…
+# … with 77 more rows, and 2 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;
+```
+]
 
 ---
 count: false
@@ -740,11 +775,11 @@ for (i in c(1, 2, 3, 4, 5)) {
 ---
 # For loops
 
-- The vector to iterate over need not be sequential:
+- The vector to iterate over doesn't need to be numeric or sequential:
 
 
 ```r
-days_of_the_week &lt;- c("Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun")
+days_of_the_week &lt;- c("Tues", "Wed", "Mon", "Thur", "Sun", "Fri" )
 
 for (i in days_of_the_week) {
   print(paste("Today is", i))
@@ -752,13 +787,55 @@ for (i in days_of_the_week) {
 ```
 
 ```
-[1] "Today is Mon"
 [1] "Today is Tues"
 [1] "Today is Wed"
+[1] "Today is Mon"
 [1] "Today is Thur"
-[1] "Today is Fri"
-[1] "Today is Sat"
 [1] "Today is Sun"
+[1] "Today is Fri"
+```
+
+---
+# Use for loops to run a series of analyses
+
+```r
+mtcars #built-in R dataset
+```
+
+```
+                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+Toyota Corolla      33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+Lotus Europa        30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
 ```
 
 ---
@@ -766,8 +843,9 @@ for (i in days_of_the_week) {
 
 ```r
 preds &lt;- c("cyl", "disp", "hp", "drat", "wt", "qsec")
-cor_output &lt;- vector()
+cor_output &lt;- vector() #empty vector to store results
 for (p in preds) {
+  #Calculate each predictor's correlation with 'mpg'
   cor_output[p] &lt;- cor(mtcars['mpg'], mtcars[p])
 }
 cor_output
@@ -782,11 +860,29 @@ cor_output
 # Use for loops to run a series of analyses
 
 ```r
+# Simple linear regression
+lm(mpg ~ cyl, data = mtcars)
+```
+
+```
+
+Call:
+lm(formula = mpg ~ cyl, data = mtcars)
+
+Coefficients:
+(Intercept)          cyl  
+     37.885       -2.876  
+```
+
+---
+# Use for loops to run a series of analyses
+
+```r
 preds &lt;- c("cyl", "disp", "hp", "drat", "wt", "qsec")
 for (p in preds) {
-  f &lt;- as.formula(paste("mpg ~ ", p))
+  f &lt;- as.formula(paste("mpg ~ ", p)) # Convert a string to a formula
   res &lt;- lm(f, data = mtcars)
-  print(p)
+  print(p) #Need to explicitly print things within loops so that they display
   print(summary(res))
 }
 ```
